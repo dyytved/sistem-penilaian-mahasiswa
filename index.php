@@ -9,10 +9,10 @@ $mahasiswa = array(
 
 function rataRata($a, $b, $c, $d) { return ($a + $b + $c + $d) / 4; }
 function statusGrade($r) { 
-    if ($r >= 80) return array("LULUS", "A", "success");
-    elseif ($r >= 70) return array("LULUS", "B", "info");
-    elseif ($r >= 60) return array("LULUS", "C", "warning");
-    else return array("TIDAK LULUS", "D", "danger");
+    if ($r >= 80) return array("LULUS", "A");
+    elseif ($r >= 70) return array("LULUS", "B");
+    elseif ($r >= 60) return array("LULUS", "C");
+    else return array("TIDAK LULUS", "D");
 }
 
 $totalRata = 0;
@@ -20,69 +20,70 @@ foreach ($mahasiswa as $s) $totalRata += rataRata($s["mtk"], $s["prog"], $s["db"
 $rataKelas = $totalRata / count($mahasiswa);
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Penilaian Mahasiswa</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: linear-gradient(135deg, #667eea, #764ba2); min-height: 100vh; padding: 20px 0; }
-        .container { background: white; border-radius: 15px; padding: 30px; }
-        .header h1 { color: #667eea; text-align: center; margin-bottom: 30px; }
-        .stats { background: #667eea; color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
-        table thead { background: #667eea; color: white; }
-        table tbody tr:hover { background: #f5f5f5; }
-        .badge-success { background: #28a745 !important; }
-        .badge-info { background: #17a2b8 !important; }
-        .badge-warning { background: #ffc107 !important; }
-        .badge-danger { background: #dc3545 !important; }
+        body { font-family: Arial; margin: 20px; background: #f5f5f5; }
+        .container { background: white; padding: 20px; border-radius: 5px; max-width: 1000px; }
+        h1 { color: #333; text-align: center; }
+        .stats { margin-bottom: 20px; }
+        .stat-box { display: inline-block; width: 45%; margin: 10px; padding: 15px; background: #667eea; color: white; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #333; color: white; padding: 10px; text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid #ddd; text-align: center; }
+        tr:hover { background: #f9f9f9; }
+        .lulus { color: green; font-weight: bold; }
+        .tidaklulus { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header"><h1>📊 Sistem Penilaian Mahasiswa</h1></div>
+        <h1>Sistem Penilaian Mahasiswa</h1>
         
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="stats"><h5>Total Mahasiswa</h5><h3><?php echo count($mahasiswa); ?></h3></div>
-            </div>
-            <div class="col-md-6">
-                <div class="stats"><h5>Rata-rata Kelas</h5><h3><?php echo number_format($rataKelas, 2); ?></h3></div>
-            </div>
+        <div class="stats">
+            <div class="stat-box">Total Mahasiswa: <strong><?php echo count($mahasiswa); ?></strong></div>
+            <div class="stat-box">Rata-rata Kelas: <strong><?php echo number_format($rataKelas, 2); ?></strong></div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>No</th><th>NIM</th><th>Nama</th><th>MTK</th><th>Prog</th><th>DB</th><th>Web</th><th>Rata-rata</th><th>Grade</th><th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    $no = 1;
-                    foreach ($mahasiswa as $s) {
-                        $r = rataRata($s["mtk"], $s["prog"], $s["db"], $s["web"]);
-                        list($status, $grade, $color) = statusGrade($r);
-                    ?>
-                    <tr>
-                        <td><?php echo $no++; ?></td>
-                        <td><?php echo $s["nim"]; ?></td>
-                        <td><?php echo $s["nama"]; ?></td>
-                        <td class="text-center"><?php echo $s["mtk"]; ?></td>
-                        <td class="text-center"><?php echo $s["prog"]; ?></td>
-                        <td class="text-center"><?php echo $s["db"]; ?></td>
-                        <td class="text-center"><?php echo $s["web"]; ?></td>
-                        <td class="text-center"><strong><?php echo number_format($r, 2); ?></strong></td>
-                        <td class="text-center"><span class="badge bg-<?php echo $color; ?>"><?php echo $grade; ?></span></td>
-                        <td class="text-center"><span class="badge bg-<?php echo $color; ?>"><?php echo $status; ?></span></td>
-                    </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>NIM</th>
+                    <th>Nama</th>
+                    <th>MTK</th>
+                    <th>Prog</th>
+                    <th>DB</th>
+                    <th>Web</th>
+                    <th>Rata-rata</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $no = 1;
+                foreach ($mahasiswa as $s) {
+                    $r = rataRata($s["mtk"], $s["prog"], $s["db"], $s["web"]);
+                    list($status, $grade) = statusGrade($r);
+                    $class = ($status == "LULUS") ? "lulus" : "tidaklulus";
+                ?>
+                <tr>
+                    <td><?php echo $no++; ?></td>
+                    <td><?php echo $s["nim"]; ?></td>
+                    <td><?php echo $s["nama"]; ?></td>
+                    <td><?php echo $s["mtk"]; ?></td>
+                    <td><?php echo $s["prog"]; ?></td>
+                    <td><?php echo $s["db"]; ?></td>
+                    <td><?php echo $s["web"]; ?></td>
+                    <td><strong><?php echo number_format($r, 2); ?></strong></td>
+                    <td><?php echo $grade; ?></td>
+                    <td class="<?php echo $class; ?>"><?php echo $status; ?></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
